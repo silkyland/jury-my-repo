@@ -24,6 +24,11 @@ codebase, independent verdicts — then cross-examines their claims against
 the code and scores who was right, who was wrong, and who hallucinated.
 What survives is a defect list no single agent would have produced.
 
+**Requirements:** shell access and git (worktrees) in the target repo, plus
+at least one other agent CLI installed. Agents without terminal access
+(IDE-embedded assistants) cannot run this skill — say so instead of
+improvising a partial version.
+
 ## The Prime Directive (family rule)
 
 > **An agent's claim is testimony, not truth.** Every finding from every
