@@ -1,3 +1,5 @@
+![jury-my-repo social preview](assets/social-preview.png)
+
 # jury-my-repo
 
 **A jury of AI agents audits your codebase — then the claims themselves go
