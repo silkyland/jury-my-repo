@@ -61,6 +61,7 @@ Copy this into your response and check items off:
 
 ```
 Jury Progress:
+- [ ] Step 0: Preflight — git repo confirmed, .jury/ ignored, scope sized
 - [ ] Step 1: Detect jurors — probe PATH, verify headless mode per CLI
 - [ ] Step 2: Consent gate — roster + cost/time approved by user (headless ⇒ solo DEGRADED)  ⛔
 - [ ] Step 3: Brief — audit brief written to .jury/brief.md
@@ -69,6 +70,19 @@ Jury Progress:
 - [ ] Step 6: Cross-examine — every claim verified against code
 - [ ] Step 7: Scoreboard + distilled report written, acceptance checklist passed
 ```
+
+## Step 0 — Preflight
+
+Before probing for jurors, verify the venue:
+
+- `git rev-parse --show-toplevel` — must be a git repo (worktrees need it)
+  with at least one commit; jurors audit `HEAD`, so warn the user if the
+  interesting code isn't committed yet.
+- Add `.jury/` to `.git/info/exclude` (not `.gitignore` — don't touch the
+  user's tracked files).
+- Size the scope: `git ls-files | wc -l` and the language mix. Over ~2k
+  files, plan a path scope for the brief now (Step 3) instead of letting
+  every juror wander.
 
 ## Step 1 — Detect the jurors
 
@@ -124,8 +138,19 @@ For each approved juror:
    worktree even on failure (`git worktree remove --force`, then
    `git worktree prune`) — a crashed juror must not leave an orphan.
 
+Canonical launch shape (adapt flags per the catalog + live `--help`):
+
+```bash
+( cd .jury/wt-<agent> && timeout 900 <cli> <headless-flags> \
+    "$(cat ../../.jury/brief.md)" \
+    > ../reports/<agent>.md 2> ../reports/<agent>.stderr.log;
+  echo "exit=$?" >> ../reports/<agent>.md ) &
+```
+
 Run all jurors concurrently. While waiting, the orchestrator performs its
-OWN audit against the same brief — it is juror #0, same rules.
+OWN audit against the same brief — it is juror #0, same rules. Write
+juror #0's report to `.jury/reports/self.md` BEFORE reading any rival
+report — reading others first contaminates the independent verdict.
 
 ## Step 5 — Collect
 

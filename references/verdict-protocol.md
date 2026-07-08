@@ -12,7 +12,9 @@ scoreboard more than false splits.
 
 ## 2. Verify — every unique finding, no exceptions
 
-Open the cited file at the cited line and test the claim against the code:
+Verify worst-first (CRITICAL → LOW): if time or budget runs out, the
+findings that matter most are already adjudicated. Open the cited file at
+the cited line and test the claim against the code:
 
 - **CONFIRMED** — the defect is real. Quote the exact code that proves it.
   Where cheap and safe (read-only, seconds), strengthen with the repo's own

@@ -35,7 +35,10 @@ file — you are auditing, not fixing.
 2. Verify by reading the code before reporting — a suspicion is not a
    finding.
 3. Report real defects, not style preferences.
-4. Address EVERY numbered scope item: report findings or state
+4. Skip generated, vendored, and lockfile content (e.g. `node_modules/`,
+   `vendor/`, `dist/`, `*.lock`, `*.min.*`) — audit only source the team
+   maintains.
+5. Address EVERY numbered scope item: report findings or state
    "S<n>: nothing found" explicitly. A silent scope item counts as not
    audited.
 
