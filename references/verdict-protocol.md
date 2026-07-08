@@ -41,14 +41,24 @@ Anti-rules:
 
 Per agent:
 
-| Agent | Findings | Confirmed | Refuted | Duplicates | Unique confirmed | Precision |
-|-------|---------:|----------:|--------:|-----------:|-----------------:|----------:|
+| Agent | Findings | Confirmed | Refuted | Unverifiable | Duplicates | Unique confirmed | Precision |
+|-------|---------:|----------:|--------:|-------------:|-----------:|-----------------:|----------:|
 
+- **Accounting closes:** every claim carries exactly one verdict, so per
+  agent **Findings = Confirmed + Refuted + Unverifiable** (a merged
+  duplicate inherits the merged finding's verdict and is also counted in
+  Duplicates). Recompute every cell from the findings table — a
+  scoreboard number that cannot be traced back to table rows is
+  fabricated.
 - **Precision** = confirmed / (confirmed + refuted). The hallucination
-  measure — the "ใครมั่ว" column.
+  measure.
 - **Unique confirmed** = confirmed findings no other juror caught. The
   sharpness measure — a low-volume juror with unique catches beats a
   noisy one with none.
+- **Coverage:** footnote per agent which numbered scope items (S1…Sn
+  from the brief) its report addressed — findings or an explicit
+  "nothing found". SILENT items are named; skipping security is not
+  passing security.
 - Note format compliance and timeouts as footnotes — operational data for
   choosing next time's panel.
 
@@ -65,11 +75,41 @@ ranking of vendors. Say so in the report.
 2. **Refuted claims** — each with the refuting evidence; this section is
    what makes the audit trustworthy (and teaches which agent patterns to
    distrust).
-3. **Open questions** — UNVERIFIABLE items with what would settle each.
+3. **Open questions** — every UNVERIFIABLE item, none dropped, each with
+   the named verification step (exact command, credential, or runtime
+   state) that would settle it.
 4. **Scoreboard** — the table plus a two-line honest read of it.
-5. **Recommended next step** — hand the verified list to **deep-plan**
+5. **Panel integrity** — jurors empaneled vs completed, per-juror failure
+   reasons (timeout / auth / quota / format deviation). Fewer than two
+   completed reports (juror #0 included) stamps the verdict `DEGRADED`.
+6. **Recommended next step** — hand the verified list to **deep-plan**
    (Phase 0 = confirmed security/correctness fixes). The jury audits; the
    planner plans; the implementer fixes.
+
+## Acceptance checklist — pass before presenting
+
+Grade `.jury/VERDICT.md` item by item, honestly. Any failure returns you
+to the step it names; do not present a failing verdict.
+
+- [ ] Every claim in the unified findings table carries exactly one
+      verdict; CONFIRMED and REFUTED each quote `file:line` evidence.
+      (Step 6)
+- [ ] Scoreboard recomputed from the findings table: per agent,
+      Findings = Confirmed + Refuted + Unverifiable, and Precision
+      recalculated — no estimated cells. (Step 7)
+- [ ] Coverage matrix present: per agent × numbered scope item, SILENT
+      items named. (Step 5)
+- [ ] Every distilled defect names its claimants and traces to the raw
+      report file(s) in `.jury/reports/`. (Step 7)
+- [ ] Every UNVERIFIABLE item appears under Open questions with the
+      named step that would settle it. (Step 6)
+- [ ] Panel integrity section present; `DEGRADED` stamp applied when
+      fewer than two reports completed or consent was unavailable.
+      (Steps 2, 7)
+- [ ] Judge bias disclosed; juror #0's findings went through the
+      identical verify step. (Step 6)
+- [ ] All worktrees removed (crashed jurors force-removed and pruned);
+      `.jury/reports/` preserved. (Steps 4, 7)
 
 ## Repeat runs
 

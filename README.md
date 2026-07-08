@@ -26,11 +26,15 @@ gets verified has almost none.
    one's headless mode against its own `--help` (flags drift; the catalog
    is a starting point, the binary is the truth).
 2. **Consent gate** ⛔ — each juror burns YOUR tokens on its own vendor
-   account. The roster and cost note get explicit approval before anything
-   runs.
-3. **One brief for all** — a standardized audit brief (bugs / security /
-   architecture / tests) with a pinned output contract: `file:line`,
-   severity, evidence. No hints about suspected bugs — priming the jury
+   account. The roster, cost note, and estimated wall time get explicit
+   approval before anything runs. Headless/CI runs can't grant consent —
+   the skill degrades to a solo audit stamped `DEGRADED` instead of
+   launching anyone.
+3. **One brief for all** — a standardized audit brief with numbered scope
+   items (bugs / security / architecture / tests) and a pinned output
+   contract: `file:line`, severity, evidence, and an explicit
+   "nothing found" per scope item — silence on a scope item is a coverage
+   failure, not a pass. No hints about suspected bugs — priming the jury
    contaminates the comparison.
 4. **Parallel run, isolated** — every juror executes headless in its own
    disposable git worktree, timeboxed; mutations are reverted and logged.
@@ -47,8 +51,13 @@ gets verified has almost none.
    the refuted-claims section (what makes the audit trustworthy), and the
    scoreboard:
 
-| Agent | Findings | Confirmed | Refuted | Unique confirmed | Precision |
-|-------|---------:|----------:|--------:|-----------------:|----------:|
+| Agent | Findings | Confirmed | Refuted | Unverifiable | Unique confirmed | Precision |
+|-------|---------:|----------:|--------:|-------------:|-----------------:|----------:|
+
+Every scoreboard cell is recomputed from the findings table (per agent,
+findings = confirmed + refuted + unverifiable), and the verdict passes a
+mechanical acceptance checklist — including a panel-integrity section
+(who completed, who failed, and why) — before it is presented.
 
 Rerunnable after fixes land — confirmed findings should disappear; the
 `.jury/` history is the audit trail.
@@ -102,7 +111,7 @@ jury-my-repo/
 └── references/
     ├── agent-cli-catalog.md          # Known CLIs + headless invocations + safety notes
     ├── audit-brief.md                # The standardized brief + output contract
-    └── verdict-protocol.md           # Dedup, verification, scoreboard, distillation
+    └── verdict-protocol.md           # Dedup, verification, scoreboard, distillation + acceptance checklist
 ```
 
 Follows the [Vercel skills](https://github.com/vercel-labs/skills) single-skill

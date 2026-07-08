@@ -15,18 +15,18 @@ file — you are auditing, not fixing.
 
 ## Scope
 
-<one of / combination, per the user's focus:>
-- **Bugs:** logic errors, broken edge cases (null/empty/concurrent/
+<one of / combination, per the user's focus — keep the S-numbers:>
+- **S1 — Bugs:** logic errors, broken edge cases (null/empty/concurrent/
   oversized input), schema or contract mismatches between layers, dead or
   half-wired code paths.
-- **Security:** injection (SQL/command/template), XSS paths from any
+- **S2 — Security:** injection (SQL/command/template), XSS paths from any
   user-controlled value to output, missing authentication or authorization
   on mutating/data-exposing endpoints, secrets in code or config, unsafe
   deserialization, path traversal.
-- **Architecture:** layering violations, duplicated logic that has
+- **S3 — Architecture:** layering violations, duplicated logic that has
   drifted, framework misuse (reimplementing what the framework provides),
   dependency tangles, dead abstractions.
-- **Tests:** what critical paths have no coverage; tests that assert
+- **S4 — Tests:** what critical paths have no coverage; tests that assert
   nothing; run the suite if a standard command exists and report failures.
 
 ## Rules
@@ -35,7 +35,9 @@ file — you are auditing, not fixing.
 2. Verify by reading the code before reporting — a suspicion is not a
    finding.
 3. Report real defects, not style preferences.
-4. If you find nothing in a category, say so explicitly.
+4. Address EVERY numbered scope item: report findings or state
+   "S<n>: nothing found" explicitly. A silent scope item counts as not
+   audited.
 
 ## Required output format
 
@@ -51,14 +53,16 @@ For each finding:
 Severity scale: CRITICAL (exploit/data loss) > HIGH (correctness broken) >
 MEDIUM (reliability/maintainability) > LOW (minor).
 
-End with: `## Summary` — finding counts per category and your top 3 by
-severity.
+End with: `## Summary` — finding counts per numbered scope item
+(explicit zeroes included) and your top 3 by severity.
 ```
 
 ## Scoping notes for the orchestrator
 
 - Fill the Scope section per the user's focus argument; drop unused areas
-  to keep jurors concentrated.
+  to keep jurors concentrated. Keep the S-numbers of the items you retain
+  stable across all jurors — the coverage matrix in the verdict keys on
+  them.
 - For large repos, add a path scope ("audit only `src/checkout/` and
   `src/api/`") — same paths for every juror.
 - Do NOT include hints about suspected bugs — priming the jury
